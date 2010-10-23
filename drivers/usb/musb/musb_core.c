@@ -2412,9 +2412,6 @@ static int musb_suspend(struct device *dev)
 	unsigned long	flags;
 	struct musb	*musb = dev_to_musb(&pdev->dev);
 
-	if (!musb->clock)
-		return 0;
-
 	spin_lock_irqsave(&musb->lock, flags);
 
 	if (is_peripheral_active(musb)) {
@@ -2429,10 +2426,12 @@ static int musb_suspend(struct device *dev)
 
 	musb_save_context(musb);
 
-	if (musb->set_clock)
-		musb->set_clock(musb->clock, 0);
-	else
-		clk_disable(musb->clock);
+	if (musb->clock) {
+		if (musb->set_clock)
+			musb->set_clock(musb->clock, 0);
+		else
+			clk_disable(musb->clock);
+	}
 	spin_unlock_irqrestore(&musb->lock, flags);
 	return 0;
 }
@@ -2442,13 +2441,12 @@ static int musb_resume_noirq(struct device *dev)
 	struct platform_device *pdev = to_platform_device(dev);
 	struct musb	*musb = dev_to_musb(&pdev->dev);
 
-	if (!musb->clock)
-		return 0;
-
-	if (musb->set_clock)
-		musb->set_clock(musb->clock, 1);
-	else
-		clk_enable(musb->clock);
+	if (musb->clock) {
+		if (musb->set_clock)
+			musb->set_clock(musb->clock, 1);
+		else
+			clk_enable(musb->clock);
+	}
 
 	musb_restore_context(musb);
 
