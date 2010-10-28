@@ -2280,6 +2280,7 @@ restart_ih:
 			case 0: /* D1 vblank */
 				if (disp_int & LB_D1_VBLANK_INTERRUPT) {
 					drm_handle_vblank(rdev->ddev, 0);
+					rdev->pm.vblank_sync = true;
 					wake_up(&rdev->irq.vblank_queue);
 					disp_int &= ~LB_D1_VBLANK_INTERRUPT;
 					DRM_DEBUG("IH: D1 vblank\n");
@@ -2301,6 +2302,7 @@ restart_ih:
 			case 0: /* D2 vblank */
 				if (disp_int_cont & LB_D2_VBLANK_INTERRUPT) {
 					drm_handle_vblank(rdev->ddev, 1);
+					rdev->pm.vblank_sync = true;
 					wake_up(&rdev->irq.vblank_queue);
 					disp_int_cont &= ~LB_D2_VBLANK_INTERRUPT;
 					DRM_DEBUG("IH: D2 vblank\n");
@@ -2322,6 +2324,7 @@ restart_ih:
 			case 0: /* D3 vblank */
 				if (disp_int_cont2 & LB_D3_VBLANK_INTERRUPT) {
 					drm_handle_vblank(rdev->ddev, 2);
+					rdev->pm.vblank_sync = true;
 					wake_up(&rdev->irq.vblank_queue);
 					disp_int_cont2 &= ~LB_D3_VBLANK_INTERRUPT;
 					DRM_DEBUG("IH: D3 vblank\n");
@@ -2343,6 +2346,7 @@ restart_ih:
 			case 0: /* D4 vblank */
 				if (disp_int_cont3 & LB_D4_VBLANK_INTERRUPT) {
 					drm_handle_vblank(rdev->ddev, 3);
+					rdev->pm.vblank_sync = true;
 					wake_up(&rdev->irq.vblank_queue);
 					disp_int_cont3 &= ~LB_D4_VBLANK_INTERRUPT;
 					DRM_DEBUG("IH: D4 vblank\n");
@@ -2364,6 +2368,7 @@ restart_ih:
 			case 0: /* D5 vblank */
 				if (disp_int_cont4 & LB_D5_VBLANK_INTERRUPT) {
 					drm_handle_vblank(rdev->ddev, 4);
+					rdev->pm.vblank_sync = true;
 					wake_up(&rdev->irq.vblank_queue);
 					disp_int_cont4 &= ~LB_D5_VBLANK_INTERRUPT;
 					DRM_DEBUG("IH: D5 vblank\n");
@@ -2385,6 +2390,7 @@ restart_ih:
 			case 0: /* D6 vblank */
 				if (disp_int_cont5 & LB_D6_VBLANK_INTERRUPT) {
 					drm_handle_vblank(rdev->ddev, 5);
+					rdev->pm.vblank_sync = true;
 					wake_up(&rdev->irq.vblank_queue);
 					disp_int_cont5 &= ~LB_D6_VBLANK_INTERRUPT;
 					DRM_DEBUG("IH: D6 vblank\n");
