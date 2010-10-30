@@ -717,6 +717,17 @@ get_next_work_item(struct backing_dev_info *bdi)
 	return work;
 }
 
+/*
+ * Add in the number of potentially dirty inodes, because each inode
+ * write can dirty pagecache in the underlying blockdev.
+ */
+static unsigned long get_nr_dirty_pages(void)
+{
+	return global_page_state(NR_FILE_DIRTY) +
+		global_page_state(NR_UNSTABLE_NFS) +
+		get_nr_dirty_inodes();
+}
+
 static long wb_check_old_data_flush(struct bdi_writeback *wb)
 {
 	unsigned long expired;
@@ -734,13 +745,7 @@ static long wb_check_old_data_flush(struct bdi_writeback *wb)
 		return 0;
 
 	wb->last_old_flush = jiffies;
-	/*
-	 * Add in the number of potentially dirty inodes, because each inode
-	 * write can dirty pagecache in the underlying blockdev.
-	 */
-	nr_pages = global_page_state(NR_FILE_DIRTY) +
-			global_page_state(NR_UNSTABLE_NFS) +
-			get_nr_dirty_inodes();
+	nr_pages = get_nr_dirty_pages();
 
 	if (nr_pages) {
 		struct wb_writeback_work work = {
