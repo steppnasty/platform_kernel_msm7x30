@@ -185,12 +185,6 @@ static int apply_microcode_amd(int cpu)
 	return 0;
 }
 
-static int get_ucode_data(void *to, const u8 *from, size_t n)
-{
-	memcpy(to, from, n);
-	return 0;
-}
-
 static void *
 get_next_ucode(int cpu, const u8 *buf, unsigned int size, unsigned int *mc_size)
 {
@@ -198,8 +192,7 @@ get_next_ucode(int cpu, const u8 *buf, unsigned int size, unsigned int *mc_size)
 	u8 section_hdr[UCODE_CONTAINER_SECTION_HDR];
 	void *mc = NULL;
 
-	if (get_ucode_data(section_hdr, buf, UCODE_CONTAINER_SECTION_HDR))
-		return NULL;
+	get_ucode_data(section_hdr, buf, UCODE_CONTAINER_SECTION_HDR);
 
 	if (section_hdr[0] != UCODE_UCODE_TYPE) {
 		pr_err("error: invalid type field in container file section header\n");
@@ -227,8 +220,7 @@ static int install_equiv_cpu_table(const u8 *buf)
 	unsigned int *buf_pos = (unsigned int *)container_hdr;
 	unsigned long size;
 
-	if (get_ucode_data(&container_hdr, buf, UCODE_CONTAINER_HEADER_SIZE))
-		return 0;
+	get_ucode_data(&container_hdr, buf, UCODE_CONTAINER_HEADER_SIZE);
 
 	size = buf_pos[2];
 
@@ -244,10 +236,7 @@ static int install_equiv_cpu_table(const u8 *buf)
 	}
 
 	buf += UCODE_CONTAINER_HEADER_SIZE;
-	if (get_ucode_data(equiv_cpu_table, buf, size)) {
-		vfree(equiv_cpu_table);
-		return 0;
-	}
+	get_ucode_data(equiv_cpu_table, buf, size);
 
 	return size + UCODE_CONTAINER_HEADER_SIZE; /* add header length */
 }
