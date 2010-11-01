@@ -1100,7 +1100,7 @@ static int alloc_new_range(struct dma_ops_domain *dma_dom,
 		dma_ops_reserve_addresses(dma_dom, spage, pages);
 	}
 
-	/* Intialize the exclusion range if necessary */
+	/* Initialize the exclusion range if necessary */
 	for_each_iommu(iommu) {
 		if (iommu->exclusion_start &&
 		    iommu->exclusion_start >= dma_dom->aperture[index]->offset
@@ -1367,7 +1367,7 @@ static void dma_ops_domain_free(struct dma_ops_domain *dom)
 
 /*
  * Allocates a new protection domain usable for the dma_ops functions.
- * It also intializes the page table and the address allocator data
+ * It also initializes the page table and the address allocator data
  * structures required for the dma_ops interface
  */
 static struct dma_ops_domain *dma_ops_domain_alloc(void)

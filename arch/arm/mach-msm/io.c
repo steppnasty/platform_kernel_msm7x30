@@ -183,7 +183,7 @@ __msm_ioremap(unsigned long phys_addr, size_t size, unsigned int mtype)
 	if (mtype == MT_DEVICE) {
 #ifdef CONFIG_ARCH_MSM7227
 		/* The peripherals in the 88000000 - D0000000 range
-		 * are only accessable by type MT_DEVICE_NONSHARED.
+		 * are only accessible by type MT_DEVICE_NONSHARED.
 		 * Adjust mtype as necessary to make this "just work."
 		 */
 		 if ((phys_addr >= 0x88000000) && (phys_addr < 0xD0000000))

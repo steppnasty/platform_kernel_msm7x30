@@ -680,11 +680,11 @@ EXPORT_SYMBOL_GPL(__clocksource_updatefreq_scale);
 int __clocksource_register_scale(struct clocksource *cs, u32 scale, u32 freq)
 {
 
-  /* Intialize mult/shift and max_idle_ns */
-  __clocksource_updatefreq_scale(cs, scale, freq);
+	/* Intialize mult/shift and max_idle_ns */
+	__clocksource_updatefreq_scale(cs, scale, freq);
 
 
-  /* Add clocksource to the clcoksource list */
+	/* Intialize mult/shift and max_idle_ns */
 	mutex_lock(&clocksource_mutex);
 	clocksource_enqueue(cs);
 	clocksource_enqueue_watchdog(cs);
