@@ -462,7 +462,6 @@ struct snd_soc_codec {
 #ifdef CONFIG_DEBUG_FS
 	struct dentry *debugfs_codec_root;
 	struct dentry *debugfs_reg;
-	struct dentry *debugfs_pop_time;
 	struct dentry *debugfs_dapm;
 #endif
 };
@@ -597,7 +596,9 @@ struct snd_soc_card {
 
 #ifdef CONFIG_DEBUG_FS
 	struct dentry *debugfs_card_root;
+	struct dentry *debugfs_pop_time;
 #endif
+	u32 pop_time;
 };
 
 /* SoC machine DAI configuration, glues a codec and cpu DAI together */
