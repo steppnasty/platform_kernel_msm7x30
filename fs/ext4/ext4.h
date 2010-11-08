@@ -857,9 +857,9 @@ struct ext4_inode_info {
 	/* completed IOs that might need unwritten extents handling */
 	struct list_head i_completed_io_list;
 	spinlock_t i_completed_io_lock;
-	atomic_t i_ioend_count;	/* Number of outstanding io_end structs
-	current io_end structure for async DIO write*/
+	/* current io_end structure for async DIO write*/
 	ext4_io_end_t *cur_aio_dio;
+	atomic_t i_ioend_count;	/* Number of outstanding io_end structs */
 
 	spinlock_t i_block_reservation_lock;
 
@@ -2078,6 +2078,7 @@ extern int ext4_move_extents(struct file *o_filp, struct file *d_filp,
 /* page-io.c */
 extern int __init ext4_init_pageio(void);
 extern void ext4_exit_pageio(void);
+extern void ext4_ioend_wait(struct inode *);
 extern void ext4_free_io_end(ext4_io_end_t *io);
 extern ext4_io_end_t *ext4_init_io_end(struct inode *inode, gfp_t flags);
 extern int ext4_end_io_nolock(ext4_io_end_t *io);
