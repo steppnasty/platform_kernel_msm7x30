@@ -62,9 +62,7 @@ struct kconf_id {
 	enum symbol_type stype;
 };
 
-#ifdef YYDEBUG
 extern int zconfdebug;
-#endif
 
 int zconfparse(void);
 void zconfdump(FILE *out);
