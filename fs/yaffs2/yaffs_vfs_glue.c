@@ -3036,7 +3036,7 @@ static struct super_block *yaffs_internal_read_super(int yaffsVersion,
         YINIT_LIST_HEAD(&(yaffs_DeviceToLC(dev)->searchContexts));
         param->removeObjectCallback = yaffs_RemoveObjectCallback;
 
-	init_MUTEX(&(yaffs_DeviceToLC(dev)->grossLock));
+	sema_init(&(yaffs_DeviceToLC(dev)->grossLock), 1);
 
 	yaffs_GrossLock(dev);
 
@@ -3495,7 +3495,7 @@ static int __init init_yaffs_fs(void)
 
 
 
-	init_MUTEX(&yaffs_context_lock);
+	sema_init(&yaffs_context_lock, 1);
 
 	/* Install the proc_fs entries */
 	my_proc_entry = create_proc_entry("yaffs",

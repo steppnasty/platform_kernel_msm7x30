@@ -1350,7 +1350,7 @@ static int msm_fb_register(struct msm_fb_data_type *mfd)
 	mfd->pan_waiting = FALSE;
 	init_completion(&mfd->pan_comp);
 	init_completion(&mfd->refresher_comp);
-	init_MUTEX(&mfd->sem);
+	sema_init(&mfd->sem, 1);
 
 	init_timer(&mfd->msmfb_no_update_notify_timer);
 	mfd->msmfb_no_update_notify_timer.function =
@@ -1714,7 +1714,7 @@ void msm_fb_release_timeline(struct msm_fb_data_type *mfd)
 	mutex_unlock(&mfd->sync_mutex);
 }
 
-DECLARE_MUTEX(msm_fb_pan_sem);
+DEFINE_SEMAPHORE(msm_fb_pan_sem);
 static int msm_fb_pan_idle(struct msm_fb_data_type *mfd)
 {
 	int ret = 0;
@@ -3201,7 +3201,7 @@ static int msmfb_mixer_info(struct fb_info *info, unsigned long *argp)
 
 #endif
 
-DECLARE_MUTEX(msm_fb_ioctl_ppp_sem);
+DEFINE_SEMAPHORE(msm_fb_ioctl_ppp_sem);
 DEFINE_MUTEX(msm_fb_ioctl_lut_sem);
 
 /* Set color conversion matrix from user space */
