@@ -1,33 +1,18 @@
-/* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above
- *       copyright notice, this list of conditions and the following
- *       disclaimer in the documentation and/or other materials provided
- *       with the distribution.
- *     * Neither the name of Code Aurora Forum, Inc. nor the names of its
- *       contributors may be used to endorse or promote products derived
- *       from this software without specific prior written permission.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
  *
- * THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
- * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  */
 #ifndef _VCD_API_H_
 #define _VCD_API_H_
+#include <linux/types.h>
 #include "vcd_property.h"
 #include "vcd_status.h"
 
@@ -69,13 +54,20 @@ enum vcd_power_state {
 	VCD_PWR_STATE_SLEEP,
 };
 
+struct vcd_aspect_ratio {
+	u32 aspect_ratio;
+	u32 par_width;
+	u32 par_height;
+};
+
 struct vcd_frame_data {
 	u8 *virtual;
 	u8 *physical;
+	u32 ion_flag;
 	u32 alloc_len;
 	u32 data_len;
 	u32 offset;
-	s64 time_stamp;
+	s64 time_stamp; /* in usecs*/
 	u32 flags;
 	u32 frm_clnt_data;
 	struct vcd_property_dec_output_buffer dec_op_prop;
@@ -83,6 +75,10 @@ struct vcd_frame_data {
 	enum vcd_frame frame;
 	u32 ip_frm_tag;
 	u32 intrlcd_ip_frm_tag;
+	u8 *desc_buf;
+	u32 desc_size;
+	struct ion_handle *buff_ion_handle;
+	struct vcd_aspect_ratio aspect_ratio_info;
 };
 
 struct vcd_sequence_hdr {
@@ -105,6 +101,7 @@ struct vcd_buffer_requirement {
 	size_t sz;
 	u32 align;
 	u32 buf_pool_id;
+	size_t meta_buffer_size;
 };
 
 struct vcd_init_config {
@@ -121,11 +118,14 @@ struct vcd_init_config {
 	void (*timer_stop) (void *timer_handle);
 };
 
+/*Flags passed to vcd_open*/
+#define VCD_CP_SESSION 0x00000001
+
 u32 vcd_init(struct vcd_init_config *config, s32 *driver_handle);
 u32 vcd_term(s32 driver_handle);
 u32 vcd_open(s32 driver_handle, u32 decoding,
 	void (*callback) (u32 event, u32 status, void *info, size_t sz,
-	void *handle, void *const client_data), void *client_data);
+	void *handle, void *const client_data), void *client_data, int flags);
 u32 vcd_close(void *handle);
 u32 vcd_encode_start(void *handle);
 u32 vcd_encode_frame(void *handle, struct vcd_frame_data *input_frame);
@@ -155,5 +155,6 @@ u32 vcd_set_device_power(s32 driver_handle,
 void vcd_read_and_clear_interrupt(void);
 void vcd_response_handler(void);
 u8 vcd_get_num_of_clients(void);
-
+u32 vcd_get_ion_status(void);
+struct ion_client *vcd_get_ion_client(void);
 #endif
