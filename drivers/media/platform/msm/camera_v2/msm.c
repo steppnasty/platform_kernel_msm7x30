@@ -367,7 +367,6 @@ int msm_create_command_ack_q(unsigned int session_id, unsigned int stream_id)
 	struct msm_session *session;
 	struct msm_command_ack *cmd_ack;
 
-	pr_info("aospSX[%s]+\n", __func__);
 	if (!msm_session_q)
 		return -ENODEV;
 
@@ -390,7 +389,6 @@ int msm_create_command_ack_q(unsigned int session_id, unsigned int stream_id)
 	msm_enqueue(&session->command_ack_q, &cmd_ack->list);
 	session->command_ack_q.len++;
 	mutex_unlock(&session->lock);
-	pr_info("aospSX[%s]-\n", __func__);
 	return 0;
 }
 
