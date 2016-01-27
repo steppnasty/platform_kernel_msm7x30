@@ -2513,6 +2513,7 @@ static void __init glacier_map_io(void)
 {
 	printk(KERN_INFO "[%s]\n", __func__);
 
+	msm_shared_ram_phys = 0x00100000;
 	msm_map_common_io();
 }
 

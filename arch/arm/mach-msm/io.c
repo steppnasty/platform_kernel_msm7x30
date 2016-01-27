@@ -35,11 +35,12 @@
 		.type = MT_DEVICE_NONSHARED, \
 	 }
 
-#ifdef CONFIG_ARCH_MSM8X60
 /* msm_shared_ram_phys default value of 0x00100000 is the most common value
  * and should work as-is for any target without stacked memory.
  */
 unsigned int msm_shared_ram_phys = 0x00100000;
+
+#ifdef CONFIG_ARCH_MSM8X60
 
 static void msm_map_io(struct map_desc *io_desc, int size)
 {
