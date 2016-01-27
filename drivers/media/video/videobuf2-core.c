@@ -1166,10 +1166,8 @@ int vb2_qbuf(struct vb2_queue *q, struct v4l2_buffer *b)
 	 * If already streaming, give the buffer to driver for processing.
 	 * If not, the buffer will be given to driver on next streamon.
 	 */
-	if (q->streaming) {
-		pr_info("aospSX[%s]->enqueue_in_driver\n", __func__);
+	if (q->streaming)
 		__enqueue_in_driver(vb);
-	}
 
 	/* Fill buffer information for the userspace */
 	__fill_v4l2_buffer(vb, b);
@@ -1442,7 +1440,6 @@ int vb2_streamon(struct vb2_queue *q, enum v4l2_buf_type type)
 	 * If any buffers were queued before streamon,
 	 * we can now pass them to driver for processing.
 	 */
-	pr_info("aospSX[%s] list for enqueue_in_driver\n", __func__);
 	list_for_each_entry(vb, &q->queued_list, queued_entry)
 		__enqueue_in_driver(vb);
 
