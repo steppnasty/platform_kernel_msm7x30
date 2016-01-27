@@ -1816,7 +1816,9 @@ int32_t msm_sensor_platform_probe(struct platform_device *pdev, void *data)
 	}
 	/* TODO: get CCI subdev */
 	cci_client = s_ctrl->sensor_i2c_client->cci_client;
+#ifdef CONFIG_MSM_CCI
 	cci_client->cci_subdev = msm_cci_get_subdev();
+#endif
 	cci_client->cci_i2c_master = s_ctrl->cci_i2c_master;
 	cci_client->sid =
 		s_ctrl->sensordata->slave_info->sensor_slave_addr >> 1;
