@@ -1888,14 +1888,9 @@ static struct platform_device msm_camera_sensor_mt9v113 = {
 	},
 };
 
-static struct platform_device msm_camera_server = {
-	.name = "msm_cam_server",
-	.id = 0,
-};
-
 void __init glacier_init_cam(void)
 {
-	platform_device_register(&msm_camera_server);
+	platform_device_register(&msm_device_cam);
 	platform_device_register(&msm_device_vfe);
 	platform_device_register(&msm_device_csic0);
 	//platform_device_register(&msm_device_vpe);

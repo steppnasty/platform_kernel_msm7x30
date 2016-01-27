@@ -169,6 +169,11 @@ struct platform_device msm_device_vpe = {
 	.num_resources	= ARRAY_SIZE(msm_vpe_resources),
 	.resource	= msm_vpe_resources,
 };
+
+struct platform_device msm_device_cam = {
+	.name		= "msm",
+	.id		= 0,
+};
 #endif
 
 struct platform_device asoc_msm_pcm = {
