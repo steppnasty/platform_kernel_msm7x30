@@ -2433,7 +2433,7 @@ static void __init glacier_init(void)
 #endif
 
 	platform_add_devices(devices, ARRAY_SIZE(devices));
-#ifdef CONFIG_MSM_CAMERA_V4L2
+#ifdef CONFIG_MSMB_CAMERA
 	glacier_init_cam();
 #endif
 

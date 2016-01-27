@@ -125,7 +125,7 @@ static struct platform_device ram_console_device = {
 	.resource       = ram_console_resource,
 };
 
-#ifdef CONFIG_MSM_CAMERA_V4L2
+#ifdef CONFIG_MSMB_CAMERA
 static struct resource msm_csic_resources[] = {
 	{
 		.name	= "csic",
