@@ -278,29 +278,29 @@ static u32 res_trk_enable_videocore(void)
 			__func__, rc);
 
 		resource_context.pclk = clk_get(resource_context.device,
-			"iface_clk");
+			"mfc_pclk");
 
 		if (IS_ERR(resource_context.pclk)) {
-			VCDRES_MSG_ERROR("%s(): iface_clk get failed\n"
+			VCDRES_MSG_ERROR("%s(): mfc_pclk get failed\n"
 							 , __func__);
 			goto bail_out;
 		}
 
 		resource_context.hclk = clk_get(resource_context.device,
-			"core_clk");
+			"mfc_clk");
 
 		if (IS_ERR(resource_context.hclk)) {
-			VCDRES_MSG_ERROR("%s(): core_clk get failed\n"
+			VCDRES_MSG_ERROR("%s(): mfc_clk get failed\n"
 							 , __func__);
 
 			goto release_pclk;
 		}
 
 		resource_context.hclk_div2 =
-			clk_get(resource_context.device, "core_div2_clk");
+			clk_get(resource_context.device, "mfc_div2_clk");
 
 		if (IS_ERR(resource_context.hclk_div2)) {
-			VCDRES_MSG_ERROR("%s(): core_div2_clk get failed\n"
+			VCDRES_MSG_ERROR("%s(): mfc_div2_clk get failed\n"
 							 , __func__);
 			goto release_hclk_pclk;
 		}
@@ -416,7 +416,7 @@ u32 res_trk_power_up(void)
 {
 	VCDRES_MSG_MED("\n res_trk_power_up():: "
 		"Calling AXI add requirement\n");
-	ebi1_clk = clk_get(resource_context.device, "mem_clk");
+	ebi1_clk = clk_get(resource_context.device, "ebi1_clk");
 	if (IS_ERR(ebi1_clk)) {
 		VCDRES_MSG_ERROR("Request AXI bus QOS fails.");
 		return false;
