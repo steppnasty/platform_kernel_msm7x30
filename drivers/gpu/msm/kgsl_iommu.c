@@ -20,6 +20,7 @@
 #include <mach/socinfo.h>
 #include <mach/msm_iomap.h>
 #include <mach/board.h>
+#include <mach/iommu_domains.h>
 #include <stddef.h>
 
 #include "kgsl.h"
@@ -80,7 +81,7 @@ static struct kgsl_iommu_device *get_iommu_device(struct kgsl_iommu_unit *unit,
 }
 
 static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
-	struct device *dev, unsigned long addr, int flags)
+	struct device *dev, unsigned long addr, int flags, void *token)
 {
 	struct kgsl_iommu_unit *iommu_unit = get_iommu_unit(dev);
 	struct kgsl_iommu_device *iommu_dev = get_iommu_device(iommu_unit, dev);
@@ -312,7 +313,19 @@ static void kgsl_iommu_destroy_pagetable(void *mmu_specific_pt)
  */
 void *kgsl_iommu_create_pagetable(void)
 {
+	int domain_num;
 	struct kgsl_iommu_pt *iommu_pt;
+
+	struct msm_iova_partition kgsl_partition = {
+		.start = 0,
+		.size = 0xFFFFFFFF,
+	};
+	struct msm_iova_layout kgsl_layout = {
+		.partitions = &kgsl_partition,
+		.npartitions = 1,
+		.client_name = "kgsl",
+		.domain_flags = 0,
+	};
 
 	iommu_pt = kzalloc(sizeof(struct kgsl_iommu_pt), GFP_KERNEL);
 	if (!iommu_pt) {
@@ -320,18 +333,25 @@ void *kgsl_iommu_create_pagetable(void)
 				sizeof(struct kgsl_iommu_pt));
 		return NULL;
 	}
-	iommu_pt->domain = iommu_domain_alloc(&platform_bus_type,
-										  MSM_IOMMU_DOMAIN_PT_CACHEABLE);
-	if (!iommu_pt->domain) {
-		KGSL_CORE_ERR("Failed to create iommu domain\n");
-		kfree(iommu_pt);
-		return NULL;
-	} else {
-		iommu_set_fault_handler(iommu_pt->domain,
-			kgsl_iommu_fault_handler);
+	/* L2 redirect is not stable on IOMMU v1 */
+	if (msm_soc_version_supports_iommu_v0())
+		kgsl_layout.domain_flags = MSM_IOMMU_DOMAIN_PT_CACHEABLE;
+
+	domain_num = msm_register_domain(&kgsl_layout);
+	if (domain_num >= 0) {
+		iommu_pt->domain = msm_get_iommu_domain(domain_num);
+
+		if (iommu_pt->domain) {
+			iommu_set_fault_handler(iommu_pt->domain,
+				kgsl_iommu_fault_handler, NULL);
+
+			return iommu_pt;
+		}
 	}
 
-	return iommu_pt;
+	KGSL_CORE_ERR("Failed to create iommu domain\n");
+	kfree(iommu_pt);
+	return NULL;
 }
 
 /*
@@ -934,12 +954,11 @@ static int kgsl_iommu_start(struct kgsl_mmu *mmu)
 		status = kgsl_iommu_setup_defaultpagetable(mmu);
 		if (status)
 			return -ENOMEM;
-
-		/* Initialize the sync lock between GPU and CPU */
-		if (msm_soc_version_supports_iommu_v1() &&
-			(device->id == KGSL_DEVICE_3D0))
-				kgsl_iommu_init_sync_lock(mmu);
 	}
+
+	status = kgsl_iommu_init_sync_lock(mmu);
+	if (status)
+		return status;
 
 	/* We use the GPU MMU to control access to IOMMU registers on 8960 with
 	 * a225, hence we still keep the MMU active on 8960 */
@@ -1158,15 +1177,15 @@ static void kgsl_iommu_default_setstate(struct kgsl_mmu *mmu,
 	/* Mask off the lsb of the pt base address since lsb will not change */
 	pt_base &= (KGSL_IOMMU_TTBR0_PA_MASK << KGSL_IOMMU_TTBR0_PA_SHIFT);
 
-	/* For v1 SMMU GPU needs to be idle for tlb invalidate as well */
-	if (msm_soc_version_supports_iommu_v1())
+	/* For v0 SMMU GPU needs to be idle for tlb invalidate as well */
+	if (msm_soc_version_supports_iommu_v0())
 		kgsl_idle(mmu->device);
 
 	/* Acquire GPU-CPU sync Lock here */
 	msm_iommu_lock();
 
 	if (flags & KGSL_MMUFLAGS_PTUPDATE) {
-		if (!msm_soc_version_supports_iommu_v1())
+		if (!msm_soc_version_supports_iommu_v0())
 			kgsl_idle(mmu->device);
 		for (i = 0; i < iommu->unit_count; i++) {
 			/* get the lsb value which should not change when
