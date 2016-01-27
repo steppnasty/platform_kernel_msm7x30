@@ -540,6 +540,21 @@ struct msm_i2c_platform_data {
 	void (*msm_i2c_config_gpio)(int iface, int config_type);
 };
 
+struct msm_vidc_platform_data {
+	int memtype;
+	u32 enable_ion;
+	int disable_dmx;
+	int disable_fullhd;
+	u32 cp_enabled;
+	u32 secure_wb_heap;
+#ifdef CONFIG_MSM_BUS_SCALING
+	struct msm_bus_scale_pdata *vidc_bus_client_pdata;
+#endif
+	int cont_mode_dpb_count;
+	int disable_turbo;
+	unsigned long fw_addr;
+};
+
 struct vcap_platform_data {
 	unsigned *gpios;
 	int num_gpios;
