@@ -51,6 +51,7 @@
 #include <mach/board.h>
 #include <mach/board_htc.h>
 #include <mach/msm_serial_hs.h>
+#include <mach/camera2.h>
 #ifdef CONFIG_SERIAL_MSM_HS_PURE_ANDROID
 #include <mach/bcm_bt_lpm.h>
 #endif
@@ -1525,7 +1526,7 @@ static struct platform_device glacier_oj = {
 	}
 };
 
-static struct msm_camera_sensor_info msm_camera_sensor_s5k4e1gx_data;
+static struct msm_camera_sensor_board_info msm_camera_sensor_s5k4e1gx_data;
 static struct i2c_board_info msm_camera_boardinfo[] __initdata = {
 	{
 		I2C_BOARD_INFO("s5k4e1gx", 0x20 >> 1),
@@ -1781,7 +1782,7 @@ static struct camera_flash_cfg msm_camera_sensor_flash_cfg = {
 	.low_cap_limit		= 15,
 };
 
-static struct msm_camera_sensor_info msm_camera_sensor_s5k4e1gx_data = {
+static struct msm_camera_sensor_info msm_camera_sensor_s5k4e1gx_info = {
 	.sensor_name    = "s5k4e1gx",
 	.sensor_reset   = GLACIER_CAM_RST,
 	.vcm_pwd     = GLACIER_CAM_PWD,
@@ -1801,10 +1802,26 @@ static struct msm_camera_sensor_info msm_camera_sensor_s5k4e1gx_data = {
 	.csi_if = 0,
 };
 
+static struct msm_sensor_info_t msm_camera_sensor_s5k4e1gx_sensor_info = {
+	.sensor_name = "s5k4e1gx",
+};
+
+static struct msm_camera_slave_info msm_camera_sensor_s5k4e1gx_slave_info = {
+	.sensor_slave_addr = 0x20,
+	.sensor_id_reg_addr = 0x0000,
+	.sensor_id = 0x4E10,
+};
+
+static struct msm_camera_sensor_board_info msm_camera_sensor_s5k4e1gx_data = {
+	.sensor_name = "s5k4e1gx",
+	.slave_info = &msm_camera_sensor_s5k4e1gx_slave_info,
+	.sensor_info = &msm_camera_sensor_s5k4e1gx_sensor_info,
+};
+
 static struct platform_device msm_camera_sensor_s5k4e1gx = {
 	.name      = "msm_camera_s5k4e1gx",
 	.dev       = {
-		.platform_data = &msm_camera_sensor_s5k4e1gx_data,
+		.platform_data = &msm_camera_sensor_s5k4e1gx_info,
 	},
 };
 
