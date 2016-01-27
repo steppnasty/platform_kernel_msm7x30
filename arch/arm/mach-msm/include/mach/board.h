@@ -234,19 +234,6 @@ enum msm_sensor_type {
 	YUV_SENSOR,
 };
 
-enum camera_vreg_type {
-	REG_LDO,
-	REG_VS,
-};
-
-struct camera_vreg_t {
-	const char *reg_name;
-	enum camera_vreg_type type;
-	int min_voltage;
-	int max_voltage;
-	int op_mode;
-};
-
 struct msm_gpio_set_tbl {
 	unsigned gpio;
 	unsigned long flags;
@@ -255,11 +242,6 @@ struct msm_gpio_set_tbl {
 
 struct msm_camera_gpio_num_info {
 	uint16_t gpio_num[7];
-};
-
-struct msm_camera_csi_lane_params {
-	uint16_t csi_lane_assign;
-	uint16_t csi_lane_mask;
 };
 
 struct msm_camera_gpio_conf {
@@ -333,10 +315,6 @@ struct msm_camera_sensor_info {
 	int sensor_pwd;
 	int vcm_pwd;
 	int vcm_enable;
-	int sp3d_gate;
-	int sp3d_sys_reset;
-	int sp3d_core_gate;
-	int sp3d_pdx;
 	void(*camera_clk_switch)(void);
 	int(*camera_pm8058_power)(int); /* for express */
 	/*power*/
@@ -381,7 +359,6 @@ struct msm_camera_sensor_info {
 	struct msm_actuator_info *actuator_info;
 	struct msm_eeprom_info *eeprom_info;
 };
-
 
 struct clk;
 
