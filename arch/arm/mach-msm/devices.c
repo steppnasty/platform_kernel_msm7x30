@@ -40,6 +40,7 @@
 #include <mach/msm_rpcrouter.h>
 #include <mach/msm_hsusb_hw.h>
 #include <linux/msm_rotator.h>
+#include <linux/msm_ion.h>
 #ifdef CONFIG_USB_FUNCTION
 #include <linux/usb/mass_storage_function.h>
 #endif

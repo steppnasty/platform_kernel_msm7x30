@@ -38,7 +38,7 @@
 #include <linux/curcial_oj.h>
 #include <linux/input/pmic8058-keypad.h>
 #include <linux/proc_fs.h>
-#include <linux/ion.h>
+#include <linux/msm_ion.h>
 #include <asm/mach-types.h>
 #include <asm/mach/arch.h>
 #include <asm/mach/map.h>
