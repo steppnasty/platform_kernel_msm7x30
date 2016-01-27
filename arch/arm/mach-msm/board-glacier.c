@@ -1832,7 +1832,7 @@ static struct resource glacier_vfe_resources[] = {
 static struct msm_camera_sensor_info msm_camera_sensor_mt9v113_data;
 
 static struct platform_device msm_device_vfe = {
-	.name		= "msm_vfe",
+	.name		= "msm_vfe31",
 	.id		= 0,
 	.resource	= glacier_vfe_resources,
 	.num_resources	= ARRAY_SIZE(glacier_vfe_resources),
