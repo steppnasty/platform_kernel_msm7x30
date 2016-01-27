@@ -506,7 +506,11 @@ int msm_isp_request_axi_stream(struct vfe_device *vfe_dev, void *arg)
 
 	stream_info = &vfe_dev->axi_data.
 		stream_info[HANDLE_TO_IDX(stream_cfg_cmd->axi_stream_handle)];
-	msm_isp_axi_reserve_wm(&vfe_dev->axi_data, stream_info);
+	if (vfe_dev->hw_info->vfe_ops.axi_ops.reserve_wm)
+		vfe_dev->hw_info->vfe_ops.axi_ops.reserve_wm(vfe_dev, stream_info,
+			stream_cfg_cmd);
+	else
+		msm_isp_axi_reserve_wm(&vfe_dev->axi_data, stream_info);
 
 	if (stream_info->stream_src < RDI_INTF_0) {
 		io_format = vfe_dev->axi_data.src_info[VFE_PIX_0].input_format;

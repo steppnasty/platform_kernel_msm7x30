@@ -115,6 +115,9 @@ struct msm_vfe_axi_ops {
 	void (*clear_wm_irq_mask) (struct vfe_device *vfe_dev,
 		struct msm_vfe_axi_stream *stream_info);
 
+	void (*reserve_wm) (struct vfe_device *vfe_dev,
+		struct msm_vfe_axi_stream *stream_info,
+		struct msm_vfe_axi_stream_request_cmd *stream_cfg_cmd);
 	void (*cfg_wm_reg) (struct vfe_device *vfe_dev,
 		struct msm_vfe_axi_stream *stream_info,
 		uint8_t plane_idx);
@@ -399,9 +402,11 @@ struct vfe_device {
 	struct resource *tcsr_mem;
 	struct resource *vfe_io;
 	struct resource *vfe_vbif_io;
+	struct resource *camif_mem;
 	void __iomem *vfe_base;
 	void __iomem *vfe_vbif_base;
 	void __iomem *tcsr_base;
+	void __iomem *camif_base;
 
 	struct device *iommu_ctx[MAX_IOMMU_CTX];
 

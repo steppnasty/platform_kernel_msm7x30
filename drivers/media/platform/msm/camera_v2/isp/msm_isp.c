@@ -30,6 +30,7 @@
 #include "msm_sd.h"
 #include "msm_isp40.h"
 #include "msm_isp32.h"
+#include "msm_isp31.h"
 
 static struct msm_sd_req_vb2_q vfe_vb2_ops;
 
@@ -48,6 +49,7 @@ static const struct of_device_id msm_vfe_dt_match[] = {
 MODULE_DEVICE_TABLE(of, msm_vfe_dt_match);
 
 static const struct platform_device_id msm_vfe_dev_id[] = {
+	{"msm_vfe31", (kernel_ulong_t) &vfe31_hw_info},
 	{"msm_vfe32", (kernel_ulong_t) &vfe32_hw_info},
 	{}
 };
