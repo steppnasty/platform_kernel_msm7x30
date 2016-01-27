@@ -821,6 +821,7 @@ int msm_isp_create_isp_buf_mgr(
 	if (buf_mgr->init_done)
 		return rc;
 
+#ifdef CONFIG_MSM_IOMMU
 	buf_mgr->iommu_domain_num = msm_register_domain(iova_layout);
 	if (buf_mgr->iommu_domain_num < 0) {
 		pr_err("%s: Invalid iommu domain number\n", __func__);
@@ -835,6 +836,9 @@ int msm_isp_create_isp_buf_mgr(
 		rc = -1;
 		goto iommu_domain_error;
 	}
+#else
+	buf_mgr->iommu_domain_num = CAMERA_DOMAIN;
+#endif
 
 	buf_mgr->ops = &isp_buf_ops;
 	buf_mgr->vb2_ops = vb2_ops;
