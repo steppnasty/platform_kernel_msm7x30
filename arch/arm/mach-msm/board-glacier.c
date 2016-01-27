@@ -1898,7 +1898,7 @@ void __init glacier_init_cam(void)
 	platform_device_register(&msm_camera_server);
 	platform_device_register(&msm_device_vfe);
 	platform_device_register(&msm_device_csic0);
-	platform_device_register(&msm_device_vpe);
+	//platform_device_register(&msm_device_vpe);
 }
 
 static struct platform_device glacier_rfkill = {
