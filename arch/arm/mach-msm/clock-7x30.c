@@ -907,6 +907,7 @@ static void soc_clk_auto_off(unsigned id)
 
 static long soc_clk_round_rate(unsigned id, unsigned rate)
 {
+#if 0
 	struct clk_local *t = &clk_local_tbl[id];
 	struct clk_freq_tbl *f;
 
@@ -918,6 +919,9 @@ static long soc_clk_round_rate(unsigned id, unsigned rate)
 			return f->freq_hz;
 
 	return -EPERM;
+#else
+	return rate;
+#endif
 }
 
 long clk_round_rate(struct clk *clk, unsigned long rate)
