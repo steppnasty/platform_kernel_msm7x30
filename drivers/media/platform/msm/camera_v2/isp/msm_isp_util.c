@@ -112,6 +112,7 @@ int msm_isp_update_bandwidth(enum msm_isp_hw_client client,
 	if (!isp_bandwidth_mgr.use_count ||
 		!isp_bandwidth_mgr.bus_client) {
 		pr_err("%s: bandwidth manager inactive\n", __func__);
+		mutex_unlock(&bandwidth_mgr_mutex);
 		return -EINVAL;
 	}
 
